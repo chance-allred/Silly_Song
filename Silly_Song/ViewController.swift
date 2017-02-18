@@ -8,7 +8,12 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
+    
+    // MARK: IBOutlets
+    
+    @IBOutlet weak var nameField: UITextField!
+    @IBOutlet weak var lyricsView: UITextView!
     
     // MARK: Properties
     let bananaFanaTemplate = [
@@ -17,13 +22,41 @@ class ViewController: UIViewController {
         "Me My Mo M<SHORT_NAME>",
         "<FULL_NAME>"].joined(separator: "\n")
     
+    
+    // MARK: IBActions
+    
+    // Connected to TextField's EditingDidBegin
+    @IBAction func reset(_ sender: AnyObject) {
+        print("Resetting Values")
+        nameField.text = ""
+        lyricsView.text = ""
+        
+    }
+    
+    // Connected to TextField's editingDidEnd
+    @IBAction func displayLyrics(_ sender: AnyObject) {
+        print("Displaying lyrics")
+        
+        if let name = nameField.text {
+            let lyrics = lyricsForName(lyricsTemplate: bananaFanaTemplate, fullName: name)
+            lyricsView.text = lyrics
+        }
+        let lyrics = lyricsForName(lyricsTemplate: bananaFanaTemplate, fullName: nameField.text!)
+        lyricsView.text = lyrics
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        nameField.resignFirstResponder()
+        return true
+    }
+    
+    
     // MARK: Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        nameField.delegate = self
        
-        let song = lyricsForName(lyricsTemplate: bananaFanaTemplate, fullName: "Chance")
-        print(song)
     }
     
     func shortNameFromName(name: String) -> String {
