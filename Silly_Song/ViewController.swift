@@ -47,7 +47,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         nameField.resignFirstResponder()
-        return false // MARK: Note - Double check this
+        return false
     }
     
     
