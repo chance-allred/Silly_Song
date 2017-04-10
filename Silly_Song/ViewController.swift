@@ -25,7 +25,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: IBActions
     
-    // Connected to TextField's EditingDidBegin
+    // Connected to TextField's editingDidBegin
     @IBAction func reset(_ sender: AnyObject) {
         print("Resetting Values")
         nameField.text = ""
@@ -47,7 +47,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         nameField.resignFirstResponder()
-        return true
+        return false // MARK: Note - Double check this
     }
     
     
@@ -61,14 +61,32 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     func shortNameFromName(name: String) -> String {
         
-        let lowercaseName = name.lowercased()
+        var lowercaseName = name.lowercased()
         
+        /* If name starts with a vowel*/
+        if let firstChar = lowercaseName.characters.first {
+            switch firstChar {
+            case "a": return lowercaseName
+            case "e": return lowercaseName
+            case "i": return lowercaseName
+            case "o": return lowercaseName
+            case "u": return lowercaseName
+            default: break
+            }
+        }
+        
+        // If vowel is present after first character
         let set = CharacterSet(charactersIn: "aeiou")
-        let range = name.rangeOfCharacter(from: set)
         
-        let shortName = lowercaseName.substring(from: (range?.lowerBound)!)
+        if let range = name.rangeOfCharacter(from: set) {
+            let shortName = lowercaseName.substring(from: (range.lowerBound))
+            
+            return shortName
+        }
         
-        return shortName
+        // All other cases
+        return lowercaseName
+        
     }
     
     func lyricsForName(lyricsTemplate: String, fullName: String) -> String {
@@ -79,11 +97,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         .replacingOccurrences(of: "<SHORT_NAME>", with: shortName)
         
         return lyrics
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 
